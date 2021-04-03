@@ -1,0 +1,287 @@
+﻿@model IncidentCalendar.DM.Incidents
+
+@{
+    ViewBag.Title = "Home Page";
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+}
+
+    <fieldset>
+        <div class="title">PERFORMANTA</div>
+        <div class="container">
+            <div class="d-flex justify-content-center" style="align-items:center">
+                <div class="col-sm" style="text-align:right; padding-top: 0.2em">
+                    <span class="glyphicon glyphicon-chevron-left" onclick="prev(@serializer.Serialize(ViewBag.Incidents))"></span>
+                </div>
+                <div class="col-sm" id="Month" style="padding-top: 1em">
+                </div>
+                <div class="col-sm" style="text-align:left;">
+                    <div style="float:left; width:50%; padding-top: 0.8em">
+                        <span class="glyphicon glyphicon-chevron-right" onclick="next(@serializer.Serialize(ViewBag.Incidents))"></span>
+                    </div>
+                    <div style="float:right; width:50%; text-align:right">
+                        <!-- Button trigger modal -->
+
+                        @if ((string)@Session["Accessibility"] == "2")
+                        {
+                            <button type="button" class="btn input-block-level" data-toggle="modal" data-target="#exampleModalCenter">
+                                <span class="glyphicon glyphicon-plus" style="font-size: 20px"></span>
+                            </button>
+
+                        }
+                        else
+                        {
+                            <button type="button" class="btn input-block-level" data-toggle="modal" data-target="#noAccess">
+                                <span class="glyphicon glyphicon-plus" style="font-size: 20px"></span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="Table">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                        </tr>
+                        @foreach (var currentService in ViewBag.Services)
+                        {
+                            <tr>
+                                <td>@currentService.ServerName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal pentru butonul de adaugare-->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" style="color:#1565c0; text-align:center">Adaugare eveniment</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @using (Html.BeginForm("SaveRecord", "Home", FormMethod.Post))
+                    {
+                        <div class="modal-body">
+                            <table class="table table-bordered" id="AddTable">
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align:middle">Numele serviciului</td>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.ServerName, ViewBag.ServicesList as SelectList, "Numele serverului", new { type = "text", @class = "form-control", id = "TextBoxServerName" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Data de inceput</p>
+                                            <p style="font-size: 8px; color: gray">YYYY-MM-DD HH:MM</p>
+                                        </td>
+                                        <td style="vertical-align:middle">
+                                            @Html.TextBoxFor(model => model.StartDateFormat, new { type = "text", @class = "form-control", id = "TextBoxStartDate", placeholder = "Data de incepere" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Data de incheiere</p>
+                                            <p style="font-size: 8px; color: gray">YYYY-MM-DD HH:MM</p>
+                                        </td>
+                                        <td style="vertical-align:middle">
+                                            @Html.TextBoxFor(model => model.EndDateFormat, new { type = "text", @class = "form-control", id = "TextBoxEndDate", placeholder = "Data de incheiere" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Tipul incidentului</p>
+                                            <p style="font-size: 8px; color: gray">(1 = partial afectat, 2 = inutilizabil, 3 = mentenanta)</p>
+                                        </td>
+                                        <td style="vertical-align:middle">
+                                            @Html.TextBoxFor(model => model.IncidentType, new { type = "text", @class = "form-control", id = "TextBoxType", placeholder = "Tipul incidentului" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align:middle">Descriere</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.Description, new { type = "text", @class = "form-control", id = "TextBoxDescription", placeholder = "Descriere" })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pentru butonul de adaugare intr-o zi-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" style="color:#1565c0; text-align:center">Adaugare eveniment</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    @using (Html.BeginForm("SaveRecord", "Home", FormMethod.Post))
+                    {
+                        <div class="modal-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align:middle">Numele serviciului</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.ServerName, new { type = "text", @class = "form-control", id = "TextBoxServerName2", @readonly = "readonly" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Data de inceput</p>
+                                            <p style="font-size: 8px; color: gray">YYYY-MM-DD HH:MM</p>
+                                        </td>
+                                        <td style="vertical-align:middle">
+                                            @Html.TextBoxFor(model => model.StartDateFormat, new { type = "text", @class = "form-control", id = "TextBoxStartDate2", placeholder = "Data de incepere" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Data de incheiere</p>
+                                            <p style="font-size: 8px; color: gray">YYYY-MM-DD HH:MM</p>
+                                        </td>
+                                        <td style="vertical-align:middle">
+                                            @Html.TextBoxFor(model => model.EndDateFormat, new { type = "text", @class = "form-control", id = "TextBoxEndDate2", placeholder = "Data de incheiere" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>Tipul incidentului</p>
+                                            <p style="font-size: 8px; color: gray">(1 = partial afectat, 2 = inutilizabil, 3 = mentenanta)</p>
+                                        </td>
+                                        <td style="vertical-align:middle">
+                                            @Html.TextBoxFor(model => model.IncidentType, new { type = "text", @class = "form-control", id = "TextBoxType2", placeholder = "Tipul incidentului" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align:middle">Descriere</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.Description, new { type = "text", @class = "form-control", id = "TextBoxDescription", placeholder = "Descriere" })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pentru butonul de stergere-->
+        <div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" style="color:#1565c0; text-align:center">Esti sigur ca vrei sa stergi acest incident?</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    @using (Html.BeginForm("DeleteRecord", "Home", FormMethod.Post))
+                    {
+                        <div class="modal-body">
+                            <h4>Informatii incident</h4>
+
+                            <table class="table-borderless" style="width:100%">
+                                <tr>
+                                    <td>Id-ul Incidentului:</td>
+                                    <td>@Html.TextBoxFor(modal => modal.Id, new { type = "text", @class = "from-control", id = "DeleteId", @readonly = "readonly" })</td>
+                                </tr>
+                                <tr>
+                                    <td>Numele Serviciului:</td>
+                                    <td>@Html.TextBoxFor(modal => modal.ServerName, new { type = "text", @class = "from-control", id = "DeleteServiceName", @readonly = "readonly" })</td>
+                                </tr>
+                                <tr>
+                                    <td>Tipul incidentului:</td>
+                                    <td><input type="text" class="from-control" id="DeleteType" readonly="readonly" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Data de incepere:</td>
+                                    <td><input type="text" class="from-control" id="DeleteStart" readonly="readonly" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Data de incheiere:</td>
+                                    <td><input type="text" class="from-control" id="DeleteEnd" readonly="readonly" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Descriere:</td>
+                                    <td>@Html.TextBoxFor(modal => modal.Description, new { type = "text", @class = "from-control", id = "DeleteDescription", @readonly = "readonly" })</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal fara access-->
+        <div class="modal fade" id="noAccess" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" style="color:#1565c0; text-align:center">Lipsa acces</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                   
+                    <div class="modal-body" style="text-align: left">
+                        <span>Din pacate, doar persoanele cu rol de administrator au acces la urmatoarele optiuni:</span>
+                        <ul>
+                            <li>Adaugarea unui incident intr-o luna anume</li>
+                            <li>Adaugarea unui incident intr-o zi anume</li>
+                            <li>Stergerea unui incident</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar navbar-fixed-bottom" style="background-color:#f5f5f0">
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav" style="display:inline-block">
+                    <li style="margin:10px 10px 0px 10px ; font-size: 1.3vw">
+                        PERFORMANTA
+                    </li>
+
+                    <li style="margin: 14px 0 0 1100px; font-size: 1vw">
+                        Bun venit @Session["Username"]!
+                    </li>
+
+                    <li class="nav navbar-nav navbar-right" style="margin-right: -100px">
+                        @Html.ActionLink("Log Out", "Login", "Home")
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div id="sessionAccess" style="visibility:hidden">@Session["Accessibility"]</div>
+
+    </fieldset>

@@ -1,0 +1,48 @@
+﻿.title {
+    width: 100%;
+    position: relative;
+    margin-top: 2rem;
+    font-size: 50px;
+    color: #e68a00;
+}
+
+    .title:before {
+        content: "";
+        display: block;
+        width: 38%;
+        height: 2px;
+        background: white;
+        left: 0;
+        top: 50%;
+        position: absolute;
+    }
+
+    .title:after {
+        content: "";
+        display: block;
+        width: 38%;
+        height: 2px;
+        background: white;
+        right: 0;
+        top: 50%;
+        position: absolute;
+    }
+
+.tooltip {
+    text-align: center;
+}
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }

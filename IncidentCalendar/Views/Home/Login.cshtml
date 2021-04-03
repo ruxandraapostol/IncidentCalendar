@@ -1,0 +1,92 @@
+﻿@model IncidentCalendar.DM.Login
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<head>
+    <style>
+        .container2 {
+            vertical-align:middle;
+            margin: auto;
+            margin-top: 150px;
+            width: 500px;
+            background-color: #f5f5f0;
+            box-shadow: 0 0.5rem 0.5rem #a6a6a6;
+            padding-bottom: 20px;
+        }
+
+        .title2 {
+            width: 100%;
+            position: relative;
+            margin-top: 2rem;
+            font-size: 3vw;
+            margin-bottom: 2rem;
+            color: #0d47a1;
+        }
+
+            .title2:before {
+                content: "";
+                display: block;
+                width: 38%;
+                height: 1px;
+                background: #0d47a1;
+                left: 0;
+                top: 50%;
+                position: absolute;
+            }
+
+            .title2:after {
+                content: "";
+                display: block;
+                width: 38%;
+                height: 1px;
+                background: #0d47a1;
+                right: 0;
+                top: 50%;
+                position: absolute;
+            }
+
+        .col-2 {
+            color: #0d47a1;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+    {
+
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        
+
+        <div class="body2">
+            <div class="container2">
+
+                <div class="title2">Login</div>
+
+                <div class="row">
+                    <div class="col-2">@Html.LabelFor(a => a.Username)</div>
+                    <div class="col-9">@Html.TextBoxFor(a => a.Username, new { @class = "form-control" })</div>
+                    <div class="col-9">@Html.ValidationMessageFor(a => a.Username)</div>
+                </div>
+                <div class="row" style="visibility:hidden">..</div>
+                <div class="row">
+                    <div class="col-2">@Html.LabelFor(a => a.Password)</div>
+                    <div class="col-9">@Html.PasswordFor(a => a.Password, new { @class = "form-control" })</div>
+                    <div class="col-9">@Html.ValidationMessageFor(a => a.Password)</div>
+                </div>
+                <div class="row" style="visibility:hidden">..</div>
+                <div class="row">
+                    <!--Show details are saved successfully message-->
+                    <div class="col-lg-12">@ViewBag.Message</div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
